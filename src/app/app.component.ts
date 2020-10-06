@@ -1,10 +1,62 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  ComponentFactoryResolver,
+  OnDestroy,
+  OnInit,
+  ViewContainerRef,
+} from '@angular/core';
+import { Subject } from 'rxjs';
+import { delay, takeUntil } from 'rxjs/operators';
+import { ModalComponent } from './modal/modal.component';
+import { CookiesService } from './cookies.service';
+import { Banner } from './models/Banner';
+import { Cookie } from './models/Cookie';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-  title = 'secure-privacy-task';
+export class AppComponent implements OnInit, OnDestroy {
+  private _destruct$ = new Subject();
+  public cookiesList: Array<Cookie>;
+  public modalComponent = ModalComponent;
+
+  constructor(
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private viewContainerRef: ViewContainerRef,
+    private _cookiesService: CookiesService
+  ) {}
+
+  ngOnInit() {
+    this._cookiesService.getCookies().subscribe((cookies: Banner) => {
+      console.warn(
+        cookies.accordian.map((cookie) => {
+          return { ...cookie, Collapsed: false };
+        })
+      );
+      this.cookiesList = cookies.accordian.map((cookie) => {
+        return { ...cookie, Collapsed: false };
+      });
+    });
+  }
+
+  renderModal() {
+    const modalFactory = this.componentFactoryResolver.resolveComponentFactory(
+      ModalComponent
+    );
+    const modalRef = this.viewContainerRef.createComponent(modalFactory);
+    modalRef.instance.cookiesList = this.cookiesList;
+    modalRef.instance.destroyModal
+      .pipe(delay(300), takeUntil(this._destruct$))
+      .subscribe((destroy: boolean) => {
+        if (destroy) {
+          modalRef.destroy();
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this._destruct$.next();
+  }
 }

@@ -1,0 +1,125 @@
+<div
+  class="modal fade"
+  bsModal
+  #cookieModal="bs-modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="dialog-static-name"
+  (onHidden)="hideModal()"
+>
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-static-name" class="modal-title pull-left">
+          Can we store cookies?
+        </h4>
+        <button
+          type="button"
+          class="close pull-right"
+          aria-label="Close"
+          (click)="hideModal()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="paragraph">
+          We and our partners use technologies, such as cookies, and process
+          personal data, such as IP addresses and cookie identifiers, to
+          personalize ads and content based on your interests, measure the
+          performance of ads and content, and derive insights about the
+          audiences who saw ads and content.
+        </p>
+        <p class="paragraph">
+          Click Below to consent to the use of this technology and the
+          processing of your personal data for these purposes. You can change
+          your mind and change your consent choices at any time by returning to
+          this site.
+        </p>
+        <p class="paragraph">
+          You can familiarize with our
+          <a
+            class="privacy-policy"
+            href="https://secureprivacy.ai/privacy-policy-sp"
+            ><span>Privacy Policy</span></a
+          >
+        </p>
+        <div class="cookie-actions">
+          <button type="button" class="btn btn-primary" (click)="hideModal()">
+            Accept All
+          </button>
+          <button
+            type="button"
+            class="btn btn-light save-settings"
+            (click)="hideModal()"
+          >
+            Save Settings
+          </button>
+          <button
+            type="button"
+            class="btn btn-light btn-collapse"
+            (click)="collapse = !collapse"
+            [attr.aria-expanded]="!collapse"
+            (click)="isCaretRotated = !isCaretRotated"
+          >
+            Customize
+            <span [class.icon-rotated]="isCaretRotated" class="caret-icon"
+              >&#9650;</span
+            >
+          </button>
+        </div>
+      </div>
+      <div class="cookie-options" [collapse]="collapse" [isAnimated]="true">
+        <div class="cookie-option" *ngFor="let cookie of cookiesList">
+          <div class="option-preview">
+            <ui-switch size="small"></ui-switch> {{ cookie.CategoyHeading }}
+            <button
+              type="button"
+              class="btn btn-light btn-collapse"
+              [attr.aria-expanded]="!cookie.Collapsed"
+              (click)="cookie.Collapsed = !cookie.Collapsed"
+            >
+              <span [class.icon-rotated]="cookie.Collapsed" class="caret-icon"
+                >&#9650;</span
+              >
+            </button>
+          </div>
+          <div
+            class="option-collapsed"
+            [collapse]="!cookie.Collapsed"
+            [isAnimated]="true"
+          >
+            <div class="option-details-container">
+              <div class="option-description">
+                {{ cookie.CategoyText }}
+              </div>
+              <div class="plugin-header">
+                <div>Plugins</div>
+                <div>Block/Enable</div>
+              </div>
+              <div
+                class="plugin-description"
+                *ngFor="let plugin of cookie.PluginList"
+              >
+                <div class="plugin-name">{{ plugin.ComplianceType }}</div>
+                <div class="plugin-blocking">
+                  <ui-switch
+                    [checked]="plugin.BlockingEnabled"
+                    size="small"
+                  ></ui-switch>
+                </div>
+                <div class="plugin-domain">
+                  <a
+                    class="cookie-link"
+                    href="https://{{ plugin.PluginDomain }}"
+                    >Go to site</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
