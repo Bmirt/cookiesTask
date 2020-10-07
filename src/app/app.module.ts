@@ -8,9 +8,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalComponent } from './modal/modal.component';
 import { UiSwitchModule } from 'ngx-toggle-switch';
 import { HttpClientModule } from '@angular/common/http';
+import { FormatPluginDomainPipe } from './format-plugin-domain.pipe';
 
 @NgModule({
-  declarations: [AppComponent, ModalComponent],
+  declarations: [AppComponent, ModalComponent, FormatPluginDomainPipe],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

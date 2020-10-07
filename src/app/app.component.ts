@@ -30,11 +30,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._cookiesService.getCookies().subscribe((cookies: Banner) => {
-      console.warn(
-        cookies.accordian.map((cookie) => {
-          return { ...cookie, Collapsed: false };
-        })
-      );
       this.cookiesList = cookies.accordian.map((cookie) => {
         return { ...cookie, Collapsed: false };
       });
@@ -52,6 +47,16 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe((destroy: boolean) => {
         if (destroy) {
           modalRef.destroy();
+        }
+      });
+
+    // In case app didn't finish fetching data when dynamic modal is created
+    // We ask from the modal to update input
+    modalRef.instance.collapseCookies
+      .pipe(takeUntil(this._destruct$))
+      .subscribe((collapse: boolean) => {
+        if (collapse) {
+          modalRef.instance.cookiesList = this.cookiesList;
         }
       });
   }

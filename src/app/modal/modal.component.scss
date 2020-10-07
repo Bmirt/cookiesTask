@@ -109,6 +109,17 @@
         margin-top: 30px;
       }
     }
+    .loading {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+      img {
+        width: 30px;
+      }
+      span {
+        color: #828282;
+      }
+    }
   }
 
   .btn-light {

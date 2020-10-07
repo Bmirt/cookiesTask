@@ -60,7 +60,7 @@
             class="btn btn-light btn-collapse"
             (click)="collapse = !collapse"
             [attr.aria-expanded]="!collapse"
-            (click)="isCaretRotated = !isCaretRotated"
+            (click)="customize()"
           >
             Customize
             <span [class.icon-rotated]="isCaretRotated" class="caret-icon"
@@ -70,55 +70,64 @@
         </div>
       </div>
       <div class="cookie-options" [collapse]="collapse" [isAnimated]="true">
-        <div class="cookie-option" *ngFor="let cookie of cookiesList">
-          <div class="option-preview">
-            <ui-switch size="small"></ui-switch> {{ cookie.CategoyHeading }}
-            <button
-              type="button"
-              class="btn btn-light btn-collapse"
-              [attr.aria-expanded]="!cookie.Collapsed"
-              (click)="cookie.Collapsed = !cookie.Collapsed"
+        <div class="cookie-options-container" *ngIf="cookiesList; else loading">
+          <div class="cookie-option" *ngFor="let cookie of cookiesList">
+            <div class="option-preview">
+              <ui-switch size="small"></ui-switch> {{ cookie.CategoyHeading }}
+              <button
+                type="button"
+                class="btn btn-light btn-collapse"
+                [attr.aria-expanded]="!cookie.Collapsed"
+                (click)="cookie.Collapsed = !cookie.Collapsed"
+              >
+                <span [class.icon-rotated]="cookie.Collapsed" class="caret-icon"
+                  >&#9650;</span
+                >
+              </button>
+            </div>
+            <div
+              class="option-collapsed"
+              [collapse]="!cookie.Collapsed"
+              [isAnimated]="true"
             >
-              <span [class.icon-rotated]="cookie.Collapsed" class="caret-icon"
-                >&#9650;</span
-              >
-            </button>
-          </div>
-          <div
-            class="option-collapsed"
-            [collapse]="!cookie.Collapsed"
-            [isAnimated]="true"
-          >
-            <div class="option-details-container">
-              <div class="option-description">
-                {{ cookie.CategoyText }}
-              </div>
-              <div class="plugin-header">
-                <div>Plugins</div>
-                <div>Block/Enable</div>
-              </div>
-              <div
-                class="plugin-description"
-                *ngFor="let plugin of cookie.PluginList"
-              >
-                <div class="plugin-name">{{ plugin.ComplianceType }}</div>
-                <div class="plugin-blocking">
-                  <ui-switch
-                    [checked]="plugin.BlockingEnabled"
-                    size="small"
-                  ></ui-switch>
+              <div class="option-details-container">
+                <div class="option-description">
+                  {{ cookie.CategoyText }}
                 </div>
-                <div class="plugin-domain">
-                  <a
-                    class="cookie-link"
-                    href="https://{{ plugin.PluginDomain }}"
-                    >Go to site</a
-                  >
+                <div class="plugin-header">
+                  <div>Plugins</div>
+                  <div>Block/Enable</div>
+                </div>
+                <div
+                  class="plugin-description"
+                  *ngFor="let plugin of cookie.PluginList"
+                >
+                  <div class="plugin-name">{{ plugin.ComplianceType }}</div>
+                  <div class="plugin-blocking">
+                    <ui-switch
+                      [checked]="plugin.BlockingEnabled"
+                      size="small"
+                    ></ui-switch>
+                  </div>
+                  <div class="plugin-domain">
+                    <a
+                      class="cookie-link"
+                      [href]="plugin.PluginDomain | formatPluginDomain"
+                      target="_blank"
+                      >Go to site</a
+                    >
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <ng-template #loading
+          ><div class="loading">
+            <span>Loading...</span>
+            <img src="assets/loading.gif" />
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>
